@@ -4,8 +4,7 @@ from functools import reduce
 input_str = get_input(1)
 
 elf_calory_counts = [
-    reduce(
-        lambda acc, food: acc+food, 
+    sum(
         map(
             lambda food: int(food.strip()), 
             food_list.strip().split("\n")
