@@ -10,7 +10,7 @@ setup:
 	@make help
 
 new: 
-	@python src/utils/new_file.py
+	@python aoc_2022_python/utils/new_file.py
 
 readme:
-	@python src/utils/build_md.py
+	@python aoc_2022_python/utils/build_md.py
