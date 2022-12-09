@@ -1,20 +1,11 @@
 from utils.api import get_input
-from functools import reduce
 
-input_str = get_input(1)
-
-elf_calory_counts = [
-    sum(
-        map(
-            lambda food: int(food.strip()), 
-            food_list.strip().split("\n")
-        )
-    ) 
-    for food_list 
-    in input_str.strip().split("\n\n")
+calories = [
+    sum(map(int, food_list.split("\n")))
+    for food_list
+    in get_input(1).rstrip().split("\n\n")
 ]
+calories.sort(reverse=True)
 
-elf_calory_counts.sort(reverse=True)
-
-print(f"Solution part 1: {str(elf_calory_counts[0])}")
-print(f"Solution part 2: {str(elf_calory_counts[0] + elf_calory_counts[1] + elf_calory_counts[2])}")
+print(f"Solution part 1: {calories[0]}")
+print(f"Solution part 2: {calories[0] + calories[1] + calories[2]}")

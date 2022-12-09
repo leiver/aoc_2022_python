@@ -25,7 +25,7 @@ for row in input_str.rstrip().split("\n"):
         for i in range(amount):
             stacks_part_1[to_stack].append(stacks_part_1[from_stack].pop())
 
-        for package in stacks_part_2[from_stack][-amount : len(stacks_part_2[from_stack])]:
+        for package in stacks_part_2[from_stack][-amount: len(stacks_part_2[from_stack])]:
             stacks_part_2[to_stack].append(package)
         stacks_part_2[from_stack] = stacks_part_2[from_stack][:-amount]
 

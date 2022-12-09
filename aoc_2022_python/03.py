@@ -6,27 +6,13 @@ def get_rugsack_groups(rugsacks):
         yield rugsacks[i:i + 3]
 
 
-def find_common_item_in_sack(rugsack):
-    half_point_in_rugsack = int(len(rugsack)/2)
-    first_compartment = rugsack[:half_point_in_rugsack]
-    second_compartment = rugsack[half_point_in_rugsack:]
-
-    for item in first_compartment:
-        if item in second_compartment:
-            return item
+def find_common_item_for_sacks(rugsacks):
+    result = set(rugsacks[0])
+    for i in range(1, len(rugsacks)):
+        result = result.intersection(set(rugsacks[i]))
     
-    print(f"No common item in rugsack: {rugsack}")
-    exit()
+    return result.pop()
 
-
-def find_common_item_in_rugsack_group(rugsack_group):
-    for item in rugsack_group[0]:
-        if item in rugsack_group[1] and item in rugsack_group[2]:
-            return item
-
-    print(f"No common item in rugsack group: {rugsack_group}")
-    exit()
-    
 
 def get_item_priority(item):
     if item.isupper():
@@ -34,27 +20,27 @@ def get_item_priority(item):
     return ord(item) - 96
 
 
-input_str = get_input(3)
+rugsacks = get_input(3).rstrip().split("\n")
 
-rugsacks = input_str.rstrip().split("\n")
-
-wrongfully_placed_items = [
-    find_common_item_in_sack(rugsack)
-    for rugsack
-    in rugsacks
-]
-
-part_1_result = sum([get_item_priority(item) for item in wrongfully_placed_items])
-
+part_1_result = sum(
+    [
+        get_item_priority(
+            find_common_item_for_sacks(
+                [
+                    rugsack[:int(len(rugsack)/2)],
+                    rugsack[int(len(rugsack)/2):]
+                ]
+            )
+        )
+        for rugsack in rugsacks
+    ]
+)
 print(f"Solution part 1: {part_1_result}")
 
-
-badges = [
-    find_common_item_in_rugsack_group(rugsack_group)
+part_2_result = sum([
+    get_item_priority(find_common_item_for_sacks(rugsack_group))
     for rugsack_group
     in get_rugsack_groups(rugsacks)
-]
-
-part_2_result = sum([get_item_priority(item) for item in badges])
+])
 
 print(f"Solution part 2: {part_2_result}")
