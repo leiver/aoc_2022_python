@@ -35,3 +35,9 @@ def get_input(day):
 
     with open(path, "r") as f:
         return f.read()
+
+
+def get_test_input(day):
+    path = f"aoc_2022_python/test_inputs/{day:02d}"
+    with open(path, "r") as f:
+        return f.read()

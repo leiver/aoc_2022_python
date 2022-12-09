@@ -1,5 +1,7 @@
 from utils.api import get_input
+from utils.api import get_test_input
 import numpy
+import math
 
 delta = {
     "U": numpy.array([0, 1]),
@@ -36,8 +38,52 @@ def simulate_head_and_tails_from_commands(commands: list, tails: int):
     return len(visited_positions)
 
 
-commands = get_input(9).rstrip().split("\n")
+def divide_safely_with_0(a, b):
+    a = a.astype(float)
+    b = b.astype(float)
+    return numpy.divide(
+        a,
+        b,
+        out=numpy.zeros_like(a),
+        where=b != 0
+    ).astype(int)
+
+
+def simulate_head_and_tails_from_commands_new(commands: list, tails: int):
+    visited_positions = {(0, 0)}
+    head = numpy.array([0, 0])
+    tail = numpy.array([0, 0])
+
+    for command in commands:
+        direction, steps = command.rstrip().split(" ")
+        head += delta[direction] * int(steps)
+        distance = head - tail
+        for step in range(max(numpy.absolute(distance)) - tails):
+            # print(distance)
+            # print(absolute_distance)
+            # print(distance / absolute_distance)
+            # print(math.isnan((distance / absolute_distance)[1]))
+            delta_distance = numpy.array([
+                int(num)
+                for num
+                in divide_safely_with_0(distance, numpy.absolute(distance))
+            ])
+            tail += delta_distance
+            visited_positions.add(tuple(tail))
+            distance -= delta_distance
+        print(head)
+        print(tail)
+        print()
+
+    return len(visited_positions)
+
+
+commands = get_test_input(9).rstrip().split("\n")
 
 print(f"Solution part 1: {simulate_head_and_tails_from_commands(commands, 1)}")
 
+print(f"Solution part 1: {simulate_head_and_tails_from_commands_new(commands, 1)}")
+
 print(f"Solution part 2: {simulate_head_and_tails_from_commands(commands, 9)}")
+
+print(f"Solution part 2: {simulate_head_and_tails_from_commands_new(commands, 9)}")
