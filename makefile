@@ -11,6 +11,3 @@ setup:
 
 new: 
 	@python aoc_2022_python/utils/new_file.py
-
-readme:
-	@python aoc_2022_python/utils/build_md.py

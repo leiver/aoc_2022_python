@@ -57,8 +57,6 @@ def find_amount_of_visible_trees_for_each_tree_in_row(row: list):
 
 input_str = get_input(8)
 
-#input_str = open("aoc_2022_python/test_inputs/08", "r").read()
-
 tree_grid = [
     [int(height) for height in row.rstrip()]
     for row
