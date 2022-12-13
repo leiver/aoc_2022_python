@@ -1,68 +1,33 @@
 from utils.api import get_input
 from functools import cmp_to_key
 
-
-def parse_list(list: iter):
-    result = []
-    for part in list:
-        if part == "[":
-            result.append(parse_list(list))
-        elif part.isnumeric():
-            next_part = next(list)
-            if next_part.isnumeric():
-                part += next_part
-            result.append(int(part))
-            if next_part == "]":
-                return result
-        elif part == "]":
-            return result
-
-
 def compare_list(left, right):
-    left = iter(left)
-    right = iter(right)
-    while True:
-        left_part = next(left, None)
-        right_part = next(right, None)
-
-        if left_part is None and right_part is not None:
-            return 1
-        elif right_part is None and left_part is not None:
-            return -1
-        elif left_part is None and right_part is None:
-            return 0
-        elif isinstance(left_part, int) and isinstance(right_part, int):
-            if left_part < right_part:
-                return 1
-            elif right_part < left_part:
-                return -1
+    for left_part, right_part in zip(left, right):
+        if isinstance(left_part, int) and isinstance(right_part, int):
+            if left_part != right_part:
+                return right_part - left_part
         else:
             left_part = [left_part] if isinstance(left_part, int) else left_part
             right_part = [right_part] if isinstance(right_part, int) else right_part
 
             compared_lists = compare_list(left_part, right_part)
-
             if compared_lists != 0:
                 return compared_lists
+    return len(right) - len(left)
 
 
-input_str = get_input(13)
-right_order_pairs = []
+solution_part_1 = 0
 packets = []
 
-for index, pair in enumerate(input_str.strip().split("\n\n")):
-    left, right = pair.strip().split("\n")
-    left = parse_list(iter(left[1:]))
-    right = parse_list(iter(right[1:]))
+for index, pair in enumerate(get_input(13).strip().split("\n\n")):
+    left, right = [eval(packet) for packet in pair.strip().split("\n")]
 
-    compared = compare_list(left, right)
-
-    if compared == 1:
-        right_order_pairs.append(index+1)
+    if compare_list(left, right) > 0:
+        solution_part_1 += index+1
 
     packets += [left, right]
 
-print(f"Solution part 1: {sum(right_order_pairs)}")
+print(f"Solution part 1: {solution_part_1}")
 
 packets.append([[2]])
 packets.append([[6]])
