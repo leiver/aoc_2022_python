@@ -1,6 +1,6 @@
 from utils.api import get_input
 from math import prod
-from utils.api import get_test_input
+from copy import deepcopy
 
 
 class MultiplyWithConstant:
@@ -72,34 +72,29 @@ def parse_monkey(monkey: str):
     )
 
 
+def simulate_monkeys(monkeys, rounds, worry_function):
+    monkeys = deepcopy(monkeys)
+    for _ in range(rounds):
+        for monkey in monkeys:
+            for item in monkey.items:
+                new_worry_level = worry_function(monkey.operation(item))
+                monkeys[monkey.test(new_worry_level)].items.append(new_worry_level)
+            monkey.inspected_items += len(monkey.items)
+            monkey.items = []
+
+    inspected_items = [monkey.inspected_items for monkey in monkeys]
+    inspected_items.sort(reverse=True)
+
+    return inspected_items
+
+
 monkeys = [parse_monkey(monkey) for monkey in get_input(11).strip().split("\n\n")]
 
-for _ in range(20):
-    for monkey in monkeys:
-        for item in monkey.items:
-            new_worry_level = int(monkey.operation(item) / 3)
-            monkeys[monkey.test(new_worry_level)].items.append(new_worry_level)
-        monkey.inspected_items += len(monkey.items)
-        monkey.items = []
-
-inspected_items = [monkey.inspected_items for monkey in monkeys]
-inspected_items.sort(reverse=True)
+inspected_items = simulate_monkeys(monkeys, 20, lambda worry_level: int(worry_level / 3))
 
 print(f"Solution part 1: {prod(inspected_items[:2])}")
 
-
-monkeys = [parse_monkey(monkey) for monkey in get_input(11).strip().split("\n\n")]
 worry_cap = prod([monkey.divisibility_factor for monkey in monkeys])
+inspected_items = simulate_monkeys(monkeys, 10000, lambda worry_level: worry_level % worry_cap)
 
-for _ in range(10000):
-    for monkey in monkeys:
-        for item in monkey.items:
-            new_worry_level = monkey.operation(item) % worry_cap
-            monkeys[monkey.test(new_worry_level)].items.append(new_worry_level)
-        monkey.inspected_items += len(monkey.items)
-        monkey.items = []
-
-inspected_items = [monkey.inspected_items for monkey in monkeys]
-inspected_items.sort(reverse=True)
-
-print(f"Solution part 1: {prod(inspected_items[:2])}")
+print(f"Solution part 2: {prod(inspected_items[:2])}")
