@@ -1,5 +1,17 @@
 import requests
 from os.path import exists
+import numpy
+
+
+def divide_safely_with_0(a, b):
+    a = a.astype(float)
+    b = b.astype(float)
+    return numpy.divide(
+        a,
+        b,
+        out=numpy.zeros_like(a),
+        where=b != 0
+    ).astype(int)
 
 
 def get_session_id(filename):
@@ -41,3 +53,8 @@ def get_test_input(day):
     path = f"aoc_2022_python/test_inputs/{day:02d}"
     with open(path, "r") as f:
         return f.read()
+
+
+def sliding_window(list, length):
+    for i in range(0, len(list) - length+1):
+        yield list[i:i + length]
